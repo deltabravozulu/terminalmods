@@ -2,7 +2,7 @@
 
 : ${TERM:=xterm-256color} ${HOME:=/} ${MKSH:=/system/bin/sh} ${HOSTNAME:=android}
 : ${SHELL:=$MKSH} ${USER:=$(getprop ro.product.device)}
-if (( USER_ID )); then PS1='$'; else PS1='#'; fi
+if ((USER_ID)); then PS1='$'; else PS1='#'; fi
 
 PS1='$USER@$HOSTNAME:${PWD:-?} '"$PS1 "
 if [ -d "/sbin/.magisk/busybox" ]; then
@@ -11,16 +11,17 @@ elif [ -d "/sbin/.core/busybox" ]; then
   BBDIR="/sbin/.core/busybox"
 elif [ -f "/data/adb/magisk/busybox" ]; then
   BBDIR="/data/adb/magisk"
+else
+  BBDIR="/system/bin"
 fi
-echo $BBDIR
 
 PATH=$PATH:/sbin:$BBDIR:.
 export TERM HOME MKSH HOSTNAME SHELL USER PATH
 # Place your own aliases in <SDCARD>/terminal/.aliases for ease.
 
 for p in ~/.bin; do
-	[[ -d $p/. ]] || continue
-	[[ :$PATH: = *:$p:* ]] || PATH=$p:$PATH
+  [[ -d $p/. ]] || continue
+  [[ :$PATH: = *:$p:* ]] || PATH=$p:$PATH
 done
 
 unset p

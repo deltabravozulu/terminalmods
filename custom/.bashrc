@@ -4,8 +4,10 @@ export HOSTNAME=$(getprop ro.product.device)
 export TERM=xterm
 export TMPDIR=/data/local/tmp
 export USER=$(id -un)
-export BBDIR="/sbin/.magisk/busybox"
+#export BBDIR="/sbin/.magisk/busybox"
+export BBDIR="/data/adb/magisk"
 export PATH=${PATH}:/sbin:${BBDIR}:.
+
 
 # Bash won't get SIGWINCH if another process is in the foreground.
 # Enable checkwinsize so that bash will check the terminal size when
@@ -128,6 +130,47 @@ blank="\e[m\]"
 # Sexy af PS1
 export PS1="${green}┌|\@${cyan} ${HOSTNAME} at ${host}${purple} in \W \n${green}└─${blank} \$ "
 
+# Source aliases and stuff
 . <SDCARD>/terminal/.aliases
 #wew[ -d /data/adb/modules/gnu ] && . <SDCARD>/terminal/.gnualiases
 . <SDCARD>/terminal/.customrc
+
+####################################ALL NEW#####################
+###Termux related integrations
+export TERMUX="/data/data/com.termux/files"
+export TBIN="$TERMUX/usr/bin"
+#PATH add home bin
+export PATH=$TERMUX/home/bin:$PATH
+export PATH=$TERMUX/usr/bin:$PATH
+
+
+
+if [ -f /data/data/com.termux/files/home/bin/cdb ]; then
+    source /data/data/com.termux/files/home/bin/cdb
+fi 
+
+#Custom shell prompt ip getter
+ip_wlan=$($TBIN/ifconfig 2>/dev/null | grep -v inet6 | grep ^wlan -A3 | grep 'inet' | awk '{print $2}')
+ip_mobile=$($TBIN/ifconfig 2>/dev/null | grep -v inet6 | grep ^rmnet -A3 | grep 'inet' | awk '{print $2}')
+ip_local=$($TBIN/ifconfig 2>/dev/null | grep -v inet6 | grep ^lo -A3 | grep 'inet' | awk '{print $2}')
+
+function ip_setter() {
+  if [[ -n ${ip_wlan:+x} ]] && [[ -n ${ip_mobile:+x} ]]; then
+    IP="$ip_wlan(w)|@$ip_mobile(m)"
+  elif [[ -n ${ip_wlan:+x} ]]; then
+    IP="$ip_wlan(w)"
+  elif [[ -n ${ip_mobile:+x} ]]; then
+    IP="$ip_mobile(m)"
+  else
+    IP="$ip_local(l)"
+  fi
+  echo $IP
+}
+
+#Set custom shell prompt
+export PS1='\[\033[00;33m\]\u\
+\[\033[00;34m\]@$(ip_setter):\
+\[\033[38;5;9m\]$(pwd)\
+\[\033[00;40m\]\$\
+\[\033[00;32m\] '
+

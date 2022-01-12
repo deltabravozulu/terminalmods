@@ -12,7 +12,7 @@ alias k="s -c /data/data/com.termux/files/home/bin/android_process_killer.sh"
 alias killice='rootcheck && $ROOT killall dk.icepower.icesound'
 alias killpac='rootcheck && $ROOT kill $(pidof $1)'
 alias l="ls -lah"
-alias ls="bb ls --color=auto"
+alias ls="ls --color=always"
 alias pt="s -c /data/data/com.termux/files/usr/bin/pstree -pslt"
 alias s="su -s /data/data/com.termux/files/usr/bin/bash -l -m"
 alias sbash='. /system/etc/bash/bashrc'
