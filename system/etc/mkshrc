@@ -1,7 +1,3 @@
-# Copyright (c) 2010
-#	Thorsten Glaser <t.glaser@tarent.de>
-# This file is provided under the same terms as mksh.
-#-
 # Minimal /system/etc/mkshrc for Android
 
 : ${TERM:=xterm-256color} ${HOME:=/} ${MKSH:=/system/bin/sh} ${HOSTNAME:=android}
@@ -13,10 +9,14 @@ if [ -d "/sbin/.magisk/busybox" ]; then
   BBDIR="/sbin/.magisk/busybox"
 elif [ -d "/sbin/.core/busybox" ]; then
   BBDIR="/sbin/.core/busybox"
+elif [ -f "/data/adb/magisk/busybox" ]; then
+  BBDIR="/data/adb/magisk"
 fi
+echo $BBDIR
+
 PATH=$PATH:/sbin:$BBDIR:.
 export TERM HOME MKSH HOSTNAME SHELL USER PATH
-# Place your own aliases in <SDCARD>/.aliases for ease.
+# Place your own aliases in <SDCARD>/terminal/.aliases for ease.
 
 for p in ~/.bin; do
 	[[ -d $p/. ]] || continue
