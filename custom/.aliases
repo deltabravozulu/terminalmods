@@ -1,26 +1,31 @@
-# .aliases by Skittles9823 2018 - 2019
-#           Terminal Mods
-
+#Aliases
+alias a='s -c setprop service.adb.tcp.port 5555;s -c stop adbd; s -c start adbd; echo "Run adb connect $ip_wlan:5555"'
 alias aflinger='rootcheck && $ROOT dumpsys media.audio_flinger'
+alias apk="s -c /data/data/com.termux/files/home/bin/android_process_killer.sh"
 alias bb='$BBDIR/busybox'
 alias bsu='su -s bash'
+alias bsudo='su -c "$@"'
 alias dservice='rootcheck && $ROOT dumpsys media.dolby_memoryservice'
+alias h="s -c /data/data/com.termux/files/usr/bin/htop"
+alias ins="/data/data/com.termux/files/usr/bin/apt install --install-suggests --install-recommends"
+alias k="s -c /data/data/com.termux/files/home/bin/android_process_killer.sh"
 alias killice='rootcheck && $ROOT killall dk.icepower.icesound'
-alias l='bb ls --group-directories-first'
-alias la='l -A'
-alias ll='l -l'
-alias lo='l -al'
-alias ls='ls --color=auto'
-alias nano='nano -l'
 alias killpac='rootcheck && $ROOT kill $(pidof $1)'
+alias l="ls -lah"
+alias ls="bb ls --color=auto"
+alias pt="s -c /data/data/com.termux/files/usr/bin/pstree -pslt"
+alias s="su -s /data/data/com.termux/files/usr/bin/bash -l -m"
 alias sbash='. /system/etc/bash/bashrc'
-alias sudo='su -c "$@"'
+alias src="source /data/data/com.termux/files/home/.bashrc"
 alias sysro='mount -o remount,ro /system'
 alias sysrw='mount -o remount,rw /system'
-alias vd='cd'
+alias update="/data/data/com.termux/files/usr/bin/apt update && /data/data/com.termux/files/usr/bin/apt upgrade && /data/data/com.termux/files/usr/bin/apt dist-upgrade && /data/data/com.termux/files/usr/bin/apt full-upgrade && /data/data/com.termux/files/usr/bin/apt autoremove && /data/data/com.termux/files/usr/bin/apt clean && /data/data/com.termux/files/usr/bin/apt autoclean"
+alias z="s -c /bin/ps -A -f -P $(su -c pidof zygote) -P $(su -c pidof zygote64) -o PID,CMDLINE -k CMDLINE"
 
-# Functions which I'm gonna count as aliases
+# Functions
 getperms(){ rootcheck && $ROOT pm get-privapp-permissions $1 | sed "s/, /\n/g" 
 }
 getdenyperms(){ rootcheck && $ROOT pm get-privapp-deny-permissions $1 | sed "s/, /\n/g" 
 }
+
+
