@@ -1,6 +1,3 @@
-# .bashrc by Skittles9823 2018 - 2019
-#           Terminal Mods
-
 export host=android
 export HOME=/
 export HOSTNAME=$(getprop ro.product.device)
@@ -25,80 +22,100 @@ HISTSIZE=100
 # ... and ignore same sucessive entries.
 HISTCONTROL=ignoreboth
 
-rootcheck(){
+rootcheck() {
   ROOT= && [ $USER = root ] || ROOT="su -c"
 }
-createaliases(){
-echo -e "# .gnualiases by Skittles9823 2018 - 2019\n#           Terminal Mods\n" > <SDCARD>/.gnualiases
-find /data/adb/modules/gnu/system/bin -type l -or -type f >> <SDCARD>/.gnualiases
-find /data/adb/modules/gnu/system/xbin -type l -or -type f >> <SDCARD>/.gnualiases
-sed -i "s|/data/adb/modules/gnu/system/bin/|alias |" <SDCARD>/.gnualiases
-sed -i "s|/data/adb/modules/gnu/system/xbin/|alias |" <SDCARD>/.gnualiases
-sed -ri "s|alias (.*)|alias \1=\'/system/xbin/\1\'|" <SDCARD>/.gnualiases
-sed -i "s|cp'|cp -g'|" <SDCARD>/.gnualiases
-sed -i "s|mv'|mv -g'|" <SDCARD>/.gnualiases
-sed -i "s|#wew\[|\[|" <SDCARD>/.bashrc
-. <SDCARD>/.gnualiases
+createaliases() {
+  echo -e "# .gnualiases\n" ><SDCARD>/terminal/.gnualiases
+  find /data/adb/modules/gnu/system/bin -type l -or -type f >><SDCARD>/terminal/.gnualiases
+  find /data/adb/modules/gnu/system/xbin -type l -or -type f >><SDCARD>/terminal/.gnualiases
+  sed -i "s|/data/adb/modules/gnu/system/bin/|alias |" <SDCARD>/terminal/.gnualiases
+  sed -i "s|/data/adb/modules/gnu/system/xbin/|alias |" <SDCARD>/terminal/.gnualiases
+  sed -ri "s|alias (.*)|alias \1=\'/system/xbin/\1\'|" <SDCARD>/terminal/.gnualiases
+  sed -i "s|cp'|cp -g'|" <SDCARD>/terminal/.gnualiases
+  sed -i "s|mv'|mv -g'|" <SDCARD>/terminal/.gnualiases
+  sed -i "s|#wew\[|\[|" <SDCARD>/terminal/.bashrc
+  . <SDCARD>/terminal/.gnualiases
 }
-cdn(){
+cdn() {
   cmd=""
-  for (( i=0; i < $1; i++)) do
+  for ((i = 0; i < $1; i++)); do
     cmd="$cmd../"
   done
   cd "$cmd"
 }
-setpriority(){
+setpriority() {
   rootcheck
   case $2 in
-      high) $ROOT cmd overlay set-priority $1 lowest
-            $ROOT cmd overlay set-priority $1 highest;;
-      low) $ROOT cmd overlay set-priority $1 highest
-           $ROOT cmd overlay set-priority $1 lowest;;
-      *) echo "Usage: setpriority overlay [option]"
-         echo " "
-         echo "Options:"
-         echo " high - Sets the overlay to the highest priority"
-         echo " low  - Sets the overlay to the lowest priority";;
-    esac
-}
-adbfi(){
-  rootcheck
-  case $1 in
-    on) $ROOT setprop service.adb.tcp.port 5555
-        $ROOT stop adbd
-        $ROOT start adbd
-        echo "ADB over WiFi enabled";;
-    off) $ROOT setprop service.adb.tcp.port -1
-         $ROOT stop adbd
-         $ROOT start adbd
-         echo "ADB over WiFi disabled";;
-    stats) case `getprop service.adb.tcp.port` in -1) echo "off";; 5555) echo "on";; *) echo "off";; esac;;
-    *) echo "Usage: adbfi [option]"
-       echo " "
-       echo "Options:"
-       echo " on    - Enables ADB over Wifi"
-       echo " off   - Disables ADB over WiFi"
-       echo " stats - Gets current status";;
+  high)
+    $ROOT cmd overlay set-priority $1 lowest
+    $ROOT cmd overlay set-priority $1 highest
+    ;;
+  low)
+    $ROOT cmd overlay set-priority $1 highest
+    $ROOT cmd overlay set-priority $1 lowest
+    ;;
+  *)
+    echo "Usage: setpriority overlay [option]"
+    echo " "
+    echo "Options:"
+    echo " high - Sets the overlay to the highest priority"
+    echo " low  - Sets the overlay to the lowest priority"
+    ;;
   esac
 }
-overlays(){
+adbfi() {
+  rootcheck
+  case $1 in
+  on)
+    $ROOT setprop service.adb.tcp.port 5555
+    $ROOT stop adbd
+    $ROOT start adbd
+    echo "ADB over WiFi enabled"
+    ;;
+  off)
+    $ROOT setprop service.adb.tcp.port -1
+    $ROOT stop adbd
+    $ROOT start adbd
+    echo "ADB over WiFi disabled"
+    ;;
+  stats) case $(getprop service.adb.tcp.port) in -1) echo "off" ;; 5555) echo "on" ;; *) echo "off" ;; esac ;;
+  *)
+    echo "Usage: adbfi [option]"
+    echo " "
+    echo "Options:"
+    echo " on    - Enables ADB over Wifi"
+    echo " off   - Disables ADB over WiFi"
+    echo " stats - Gets current status"
+    ;;
+  esac
+}
+overlays() {
   opt=$1
   rootcheck
   [ "$2" ] || opt=null
   case $opt in
-    enable) shift
-            for i in $($ROOT cmd overlay list | grep -iE "^\[.*$1" | sed 's|\[.* ||g'); do $ROOT cmd overlay enable $i; done;;
-    disable) shift
-             for i in $($ROOT cmd overlay list | grep -iE "^\[.*$1" | sed 's|\[.* ||g'); do $ROOT cmd overlay disable $i; done;;
-    list) shift
-          overlayList=$($ROOT cmd overlay list | grep -iE "^\[.*$1")
-          echo "$overlayList";;
-    *) echo "Usage: overlays [option] (keyword)"
-       echo " "
-       echo "Options:"
-       echo " enable  - Enables all overlays that include the keyword in the packagename"
-       echo " disable - Disables all overlays that include the keyword in the packagename"
-       echo " list    - Lists all overlays that include the keyword in the packagename";;
+  enable)
+    shift
+    for i in $($ROOT cmd overlay list | grep -iE "^\[.*$1" | sed 's|\[.* ||g'); do $ROOT cmd overlay enable $i; done
+    ;;
+  disable)
+    shift
+    for i in $($ROOT cmd overlay list | grep -iE "^\[.*$1" | sed 's|\[.* ||g'); do $ROOT cmd overlay disable $i; done
+    ;;
+  list)
+    shift
+    overlayList=$($ROOT cmd overlay list | grep -iE "^\[.*$1")
+    echo "$overlayList"
+    ;;
+  *)
+    echo "Usage: overlays [option] (keyword)"
+    echo " "
+    echo "Options:"
+    echo " enable  - Enables all overlays that include the keyword in the packagename"
+    echo " disable - Disables all overlays that include the keyword in the packagename"
+    echo " list    - Lists all overlays that include the keyword in the packagename"
+    ;;
   esac
 }
 
@@ -111,6 +128,6 @@ blank="\e[m\]"
 # Sexy af PS1
 export PS1="${green}┌|\@${cyan} ${HOSTNAME} at ${host}${purple} in \W \n${green}└─${blank} \$ "
 
-. <SDCARD>/.aliases
-#wew[ -d /data/adb/modules/gnu ] && . <SDCARD>/.gnualiases
-. <SDCARD>/.customrc
+. <SDCARD>/terminal/.aliases
+#wew[ -d /data/adb/modules/gnu ] && . <SDCARD>/terminal/.gnualiases
+. <SDCARD>/terminal/.customrc
