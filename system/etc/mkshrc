@@ -17,7 +17,7 @@ fi
 
 PATH=$PATH:/sbin:$BBDIR:.
 export TERM HOME MKSH HOSTNAME SHELL USER PATH
-# Place your own aliases in <SDCARD>/terminal/.aliases for ease.
+# Place your own aliases in /sdcard/terminal/.aliases for ease.
 
 for p in ~/.bin; do
   [[ -d $p/. ]] || continue
@@ -26,8 +26,12 @@ done
 
 unset p
 
-if [ -f "<SDCARD>/terminal/.aliases" ]; then
-  . "<SDCARD>/terminal/.aliases"
+if [ -f "/sdcard/terminal/.aliases" ]; then
+  . "/sdcard/terminal/.aliases"
+fi
+
+if [ -f "/data/data/com.termux/files/home/.bashrc" ]; then
+  . "/data/data/com.termux/files/home/.bashrc"
 fi
 
 : place customizations above this line
