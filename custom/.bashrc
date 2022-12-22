@@ -28,16 +28,16 @@ rootcheck() {
   ROOT= && [ $USER = root ] || ROOT="su -c"
 }
 createaliases() {
-  echo -e "# .gnualiases\n" ><SDCARD>/terminal/.gnualiases
-  find /data/adb/modules/gnu/system/bin -type l -or -type f >><SDCARD>/terminal/.gnualiases
-  find /data/adb/modules/gnu/system/xbin -type l -or -type f >><SDCARD>/terminal/.gnualiases
-  sed -i "s|/data/adb/modules/gnu/system/bin/|alias |" <SDCARD>/terminal/.gnualiases
-  sed -i "s|/data/adb/modules/gnu/system/xbin/|alias |" <SDCARD>/terminal/.gnualiases
-  sed -ri "s|alias (.*)|alias \1=\'/system/xbin/\1\'|" <SDCARD>/terminal/.gnualiases
-  sed -i "s|cp'|cp -g'|" <SDCARD>/terminal/.gnualiases
-  sed -i "s|mv'|mv -g'|" <SDCARD>/terminal/.gnualiases
-  sed -i "s|#wew\[|\[|" <SDCARD>/terminal/.bashrc
-  . <SDCARD>/terminal/.gnualiases
+  echo -e "# .gnualiases\n" >/sdcard/terminal/.gnualiases
+  find /data/adb/modules/gnu/system/bin -type l -or -type f >>/sdcard/terminal/.gnualiases
+  find /data/adb/modules/gnu/system/xbin -type l -or -type f >>/sdcard/terminal/.gnualiases
+  sed -i "s|/data/adb/modules/gnu/system/bin/|alias |" /sdcard/terminal/.gnualiases
+  sed -i "s|/data/adb/modules/gnu/system/xbin/|alias |" /sdcard/terminal/.gnualiases
+  sed -ri "s|alias (.*)|alias \1=\'/system/xbin/\1\'|" /sdcard/terminal/.gnualiases
+  sed -i "s|cp'|cp -g'|" /sdcard/terminal/.gnualiases
+  sed -i "s|mv'|mv -g'|" /sdcard/terminal/.gnualiases
+  sed -i "s|#wew\[|\[|" /sdcard/terminal/.bashrc
+  . /sdcard/terminal/.gnualiases
 }
 cdn() {
   cmd=""
@@ -131,9 +131,9 @@ blank="\e[m\]"
 export PS1="${green}┌|\@${cyan} ${HOSTNAME} at ${host}${purple} in \W \n${green}└─${blank} \$ "
 
 # Source aliases and stuff
-. <SDCARD>/terminal/.aliases
-#wew[ -d /data/adb/modules/gnu ] && . <SDCARD>/terminal/.gnualiases
-. <SDCARD>/terminal/.customrc
+. /sdcard/terminal/.aliases
+#wew[ -d /data/adb/modules/gnu ] && . /sdcard/terminal/.gnualiases
+. /sdcard/terminal/.customrc
 
 ####################################ALL NEW#####################
 ###Termux related integrations
@@ -147,7 +147,7 @@ export PATH=$TERMUX/usr/bin:$PATH
 
 if [ -f /data/data/com.termux/files/home/bin/cdb ]; then
     source /data/data/com.termux/files/home/bin/cdb
-fi 
+fi
 
 #Custom shell prompt ip getter
 ip_wlan=$($TBIN/ifconfig 2>/dev/null | grep -v inet6 | grep ^wlan -A3 | grep 'inet' | awk '{print $2}')
@@ -173,4 +173,3 @@ export PS1='\[\033[00;33m\]\u\
 \[\033[38;5;9m\]$(pwd)\
 \[\033[00;40m\]\$\
 \[\033[00;32m\] '
-
